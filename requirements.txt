@@ -1,3 +1,7 @@
-streamlit
+pyyaml
 pandas
-altair
+snowflake-snowpark-python
+boto3
+requests
+numpy
+python-dotenv

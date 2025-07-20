@@ -1,0 +1,14 @@
+#### Raptive Sites ####
+df_raptive_query: 
+  select: > 
+    select  URL,
+    from    adthrive.site_extended
+    where   status = 'Active';
+
+#### Competitor Sites ####
+df_competitor_sites_query: 
+  select: > 
+    select domain, network from analytics.sigma_aggregations.jounce_pub_network_by_month
+    where date = (select max(date) from analytics.sigma_aggregations.jounce_pub_network_by_month)
+    and network in ('Freestar', 'Mediavine', 'Penske Media Corporation', 'Ezoic','Aditude', 'Playwire')
+    order by 2,1

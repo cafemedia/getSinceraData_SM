@@ -1,0 +1,98 @@
+
+OpenSincera API - Expert Guide
+==============================
+
+1. Account Creation
+-------------------
+- Visit: https://open.sincera.io
+- Use a *company email address* (Gmail, Outlook etc. are not accepted)
+- OpenSincera is currently in beta, so access requires manual review
+- For access help: hello@sincera.io
+
+2. Retrieve Your API Token
+--------------------------
+- Login at https://open.sincera.io
+- Go to "Get Started"
+- Generate your token
+- Format for usage:
+  Authorization: Bearer <YOUR_API_TOKEN>
+
+3. Ecosystem Metadata Endpoint
+------------------------------
+GET https://open.sincera.io/api/ecosystem
+Headers:
+  Authorization: Bearer <YOUR_API_TOKEN>
+
+Example Response (partial):
+{
+  "data_date": "2024-06-26",
+  "ecosystem_stats": {
+    "total_publishers": 295434,
+    "avg_ads_in_view": 4.2,
+    "avg_refresh_rate": 3.1
+  }
+}
+
+Key Fields:
+- data_date: Date data was pulled
+- total_publishers: Total number of tracked publishers
+- avg_ads_in_view: Average number of ads in view
+- avg_refresh_rate: Avg time (seconds) between ad refreshes
+- ssp_unique_count, page_weight_distribution, iab_context_counts, etc.
+
+4. Publisher Metadata Endpoint
+------------------------------
+Query by publisher ID:
+GET https://open.sincera.io/api/publisher?id=<publisher_id>
+
+Query by domain:
+GET https://open.sincera.io/api/publisher?domain=<publisher.com>
+
+Headers:
+  Authorization: Bearer <YOUR_API_TOKEN>
+
+Example Response:
+{
+  "publisher_id": "123456",
+  "domain": "businessinsider.com",
+  "page_weight": 2450,
+  "avg_ads_in_view": 5.1,
+  "refresh_rate": 4.8
+}
+
+Key Fields:
+- publisher_id: Sincera internal ID
+- domain: Domain name
+- iab_contexts: IAB categories
+- page_weight: KB size of the page
+- avg_ads_in_view: Average number of in-view ads
+- refresh_rate: Avg ad refresh time (sec)
+- ssp_count: Number of SSPs detected
+- ads_txt_status: Ads.txt validity
+- gpt_match: Whether GPT tag is matched
+- frame_depth_avg: Average iframe depth
+
+5. Best Practices
+-----------------
+- Respect API rate limits.
+- Do not scrape or mass-query.
+- Avoid reusing tokens across accounts.
+- Coordinate with hello@sincera.io for bulk or commercial integrations.
+
+6. FAQ Highlights
+-----------------
+- Gmail/personal emails are rejected.
+- If a domain is not tracked → 404 response.
+- API is free during beta.
+- Rate limits may change — request increased access if needed.
+- ACK (Acknowledged Ads) = Proportion of pixels actually rendered on screen.
+
+Summary: To Be an Expert
+-------------------------
+- Have API access set up and tested
+- Know how to pull ecosystem and publisher-level data
+- Can interpret ad metrics (ads_in_view, refresh_rate, etc.)
+- Follow OpenSincera platform usage guidelines
+- Ready to build data pipelines or dashboards using this API
+
+For advanced support, contact: hello@sincera.io
