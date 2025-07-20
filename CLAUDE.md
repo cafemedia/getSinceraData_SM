@@ -56,7 +56,7 @@ Snowflake (Internal Data) → Domain Sampling → Sincera API → Analysis → S
 - **Rate Limiting**: Respects 45 requests/minute, 5000 requests/day limits
 - **Error Handling**: Graceful handling of 404s, rate limits, network errors
 - **Progress Tracking**: Incremental saves every 100 domains, real-time ETA
-- **Snowflake Upload**: Creates dynamic table `da_sincera_data_MMYYYY`
+- **Snowflake Upload**: Creates dynamic table `da_sincera_data_YYYYMM`
 
 #### `snowpark_connect.py`
 **Purpose**: Snowflake connection management
@@ -85,7 +85,7 @@ SINCERA_API_KEY=your_api_key_here
 
 ## 📊 Data Schema
 
-### Snowflake Output Table: `da_sincera_data_MMYYYY`
+### Snowflake Output Table: `da_sincera_data_YYYYMM`
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -222,7 +222,7 @@ Based on historical data, expect results like:
 - **Incremental Saves**: Progress preservation every 100 API calls
 
 ### Snowflake Storage  
-- **Dynamic Tables**: `da_sincera_data_MMYYYY` for monthly refreshes
+- **Dynamic Tables**: `da_sincera_data_YYYYMM` for monthly refreshes
 - **Schema**: `ANALYTICS.DI_AGGREGATIONS` for business analytics
 - **Approach**: CREATE OR REPLACE for clean monthly updates
 - **Access**: Streamlit dashboard points to current month's table
@@ -230,7 +230,7 @@ Based on historical data, expect results like:
 ## 🎨 Future Enhancements
 
 ### Dashboard Integration
-- Streamlit app consuming `da_sincera_data_MMYYYY` table
+- Streamlit app consuming `da_sincera_data_YYYYMM` table
 - Interactive competitive analysis charts
 - Network performance comparisons and trends
 - Filtering by categories, metrics, time periods

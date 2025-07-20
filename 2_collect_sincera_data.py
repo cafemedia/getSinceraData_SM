@@ -242,8 +242,8 @@ def save_incremental_progress(results, batch_num):
 def get_dynamic_table_name():
     """Generate dynamic table name based on current month/year"""
     current_date = datetime.now()
-    month_year = current_date.strftime("%m%Y")  # MMYYYY format
-    return f"da_sincera_data_{month_year}"
+    year_month = current_date.strftime("%Y%m")  # YYYYMM format
+    return f"da_sincera_data_{year_month}"
 
 def upload_to_snowflake(results_df, session, table_name):
     """
