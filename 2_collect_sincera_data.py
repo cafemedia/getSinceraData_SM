@@ -264,6 +264,11 @@ def upload_to_snowflake(results_df, session, table_name):
     
     print(f"📋 Column names converted to uppercase for Snowflake")
     
+    # Drop table if exists to ensure clean schema creation
+    drop_sql = f"DROP TABLE IF EXISTS ANALYTICS.DI_AGGREGATIONS.{table_name}"
+    session.sql(drop_sql).collect()
+    print(f"📋 Dropped existing table if it existed")
+    
     # Create Snowpark DataFrame and overwrite table (auto-creates schema)
     snowpark_df = session.create_dataframe(upload_df)
     snowpark_df.write.mode("overwrite").save_as_table(f"ANALYTICS.DI_AGGREGATIONS.{table_name}")
