@@ -64,6 +64,15 @@ Snowflake (Internal Data) → Domain Sampling → Sincera API → Analysis → S
 - Retrieves credentials from AWS SSM Parameter Store
 - Session auditing and logging
 
+#### `collect_raptive_test.py`
+**Purpose**: Collects Sincera data for specific Raptive test domains
+- **Test Mode** (`--test`): 3 sample domains for validation
+- **Full Mode** (`--full`): All domains from `raptive_test_domains.txt`
+- **Rate Limiting**: Same 45 requests/minute, 5000 requests/day limits
+- **Schema Matching**: Ensures exact column order/types match main table
+- **Snowflake Upload**: Creates `da_sincera_data_YYYYMM_raptive_test` table
+- **Use Case**: A/B testing and performance enhancement analysis
+
 #### `sql_queries.yaml`
 **Purpose**: Centralized SQL query definitions
 - Raptive domains query: `adthrive.site_extended` 
@@ -76,6 +85,9 @@ Python dependencies for the pipeline
 
 #### `OpenSincera_API_Guide.txt`
 Comprehensive API documentation and field descriptions
+
+#### `raptive_test_domains.txt`
+Text file containing specific Raptive domains for A/B testing (one domain per line)
 
 #### `.env`
 Environment variables (not committed to git):
@@ -160,6 +172,13 @@ python 2_collect_sincera_data.py --test --no-snowflake
 python 2_collect_sincera_data.py --full --no-snowflake
 ```
 
+#### Option 4: Raptive Test Domains Collection
+```bash
+# Test specific Raptive domains for A/B testing
+python collect_raptive_test.py --test    # Test with 3 domains
+python collect_raptive_test.py --full    # Collect all test domains
+```
+
 ### Command Reference
 
 | Command | Purpose | Duration | Output |
@@ -167,6 +186,8 @@ python 2_collect_sincera_data.py --full --no-snowflake
 | `python 1_create_domain_sample.py` | Create balanced sample | ~2 min | `pickles/sample_domains.pkl` |
 | `python 2_collect_sincera_data.py --test` | Test API collection | ~3 min | `pickles/sincera_metrics_test.pkl` |
 | `python 2_collect_sincera_data.py --full` | Full API collection | ~70 min | `pickles/sincera_metrics_complete.pkl` |
+| `python collect_raptive_test.py --test` | Test Raptive domains | ~1 min | `pickles/sincera_metrics_raptive_test.pkl` |
+| `python collect_raptive_test.py --full` | Collect all test domains | ~9 min | `pickles/sincera_metrics_raptive_complete.pkl` |
 | `python 2_collect_sincera_data.py` | Interactive mode | Variable | User selects test/full |
 
 ## 📈 Expected Results
@@ -179,7 +200,8 @@ python 2_collect_sincera_data.py --full --no-snowflake
 - **Playwire**: 500 domains (sampled from 1,036)
 - **Penske Media**: 500 domains (sampled from 1,735)
 - **Aditude**: 118 domains (all available)
-- **Total**: ~3,118 domains
+- **Raptive-Test**: ~400 domains (from `raptive_test_domains.txt`)
+- **Total**: ~3,118 domains (main) + ~400 (test)
 
 ### Success Rates
 - Expect 70-90% success rate (2,200-2,900 successful API responses)
@@ -222,9 +244,11 @@ Based on historical data, expect results like:
 - **Incremental Saves**: Progress preservation every 100 API calls
 
 ### Snowflake Storage  
-- **Dynamic Tables**: `da_sincera_data_YYYYMM` for monthly refreshes
+- **Main Tables**: `da_sincera_data_YYYYMM` for monthly competitive data
+- **Test Tables**: `da_sincera_data_YYYYMM_raptive_test` for A/B testing
 - **Schema**: `ANALYTICS.DI_AGGREGATIONS` for business analytics
 - **Approach**: CREATE OR REPLACE for clean monthly updates
+- **Data Combination**: Use `UNION ALL BY NAME` to combine main and test tables
 - **Access**: Streamlit dashboard points to current month's table
 
 ## 🎨 Future Enhancements
@@ -307,8 +331,10 @@ This pipeline evolved from a simple sellers.json analysis to a comprehensive com
 ```
 ├── 1_create_domain_sample.py    # Domain sampling from Snowflake
 ├── 2_collect_sincera_data.py    # API data collection  
+├── collect_raptive_test.py      # Raptive test domains collection
 ├── snowpark_connect.py          # Snowflake connection utility
 ├── sql_queries.yaml             # Centralized query definitions
+├── raptive_test_domains.txt     # Test domains list
 ├── requirements.txt             # Python dependencies
 ├── OpenSincera_API_Guide.txt    # API documentation
 ├── .env                         # Environment variables (not committed)
